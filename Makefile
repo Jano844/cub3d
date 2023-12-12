@@ -2,11 +2,10 @@ NAME				=	cub3d
 
 COMPILE				=	cc
 
-FLAGS				=	-Wall -Wextra -Werror
+#FLAGS				=	-Wall -Wextra -Werror
 
 MLX_LINUX_FLAGS		=	-ldl -pthread -lm
 MLX_MAC_FLAGS		=	-framework Cocoa -framework OpenGL -framework IOKit
-
 MLXINCLUDE			=	MLX42/build/libmlx42.a -Iinclude -lglfw
 
 COLOR_RESET			=	\033[0m
@@ -34,9 +33,9 @@ endif
 
 all: $(NAME)
 
-$(NAME):			$(INCLUDE) $(OBJS)
+$(NAME): clone		$(INCLUDE) $(OBJS)
 					@cd $(INCLUDE) && make
-					@$(COMPILE) $(FLAGS) -o $(NAME) $(OBJS) -L$(INCLUDE) -lft $(LDFLAGS) $(MLXINCLUDE)
+					@$(COMPILE) $(FLAGS) -o $(NAME) $(OBJS) -L$(INCLUDE) -lft $(LDFLAGS) $(MLXINCLUDE) $(MLX_FLAGS)
 					@echo "$(COLOR_CYAN)Kompilierung abgeschlossen: $(NAME)$(COLOR_RESET)"
 
 %.o: %.c
@@ -55,7 +54,7 @@ clone:
 						make; \
 					fi
 
-remove:
+remove:				fclean
 					@if [ -d $(LOCAL_DIR) ]; then \
 						rm -rf $(LOCAL_DIR); \
 					else \
