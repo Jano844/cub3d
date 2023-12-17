@@ -6,7 +6,7 @@
 /*   By: jsanger <jsanger@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 18:29:25 by jsanger           #+#    #+#             */
-/*   Updated: 2023/12/12 22:58:03 by jsanger          ###   ########.fr       */
+/*   Updated: 2023/12/17 22:03:32 by jsanger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,48 @@
 # include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <fcntl.h>
+#include <math.h>
 #include "../MLX42/include/MLX42/MLX42.h"
 # include "../libft/srcs/libft.h"
+
+#define PI 3.14159265359
+#define SIZE 50
+
+
+typedef struct	s_player
+{
+	float	x;
+	float	y;
+	float	angle;
+}				t_player;
+
+typedef struct	s_map
+{
+	char			**map;
+	int				width;
+	int				height;
+}				t_map;
+
+typedef struct	s_data
+{
+	mlx_t			*mlx;
+	mlx_image_t		*image;
+	t_map			*map;
+	t_player		*player;
+}				t_data;
+
+
+
+
+// get_map
+void	get_map(t_map *map, char *input);
+
+// utils
+void	ft_free2d(char **str);
+void	ft_exit(t_data *data);
+
+// get_distance to wall
+float	test(t_data *data);
 
 #endif
