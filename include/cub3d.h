@@ -6,7 +6,7 @@
 /*   By: jsanger <jsanger@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 18:29:25 by jsanger           #+#    #+#             */
-/*   Updated: 2023/12/17 22:03:32 by jsanger          ###   ########.fr       */
+/*   Updated: 2023/12/17 23:35:09 by jsanger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,6 @@ void	ft_free2d(char **str);
 void	ft_exit(t_data *data);
 
 // get_distance to wall
-float	test(t_data *data);
+float	ray_distance(t_data *data);
 
 #endif

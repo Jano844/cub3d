@@ -6,7 +6,7 @@
 /*   By: jsanger <jsanger@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 18:34:57 by jsanger           #+#    #+#             */
-/*   Updated: 2023/12/17 22:27:27 by jsanger          ###   ########.fr       */
+/*   Updated: 2023/12/17 23:34:49 by jsanger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,6 @@ int main(int argc, char** argv)
 
 	// mlx_loop_hook(data->mlx, ft_hook, data);
 	// mlx_loop(data->mlx);
-	printf("distance to wall: %0.5f\n", test(data));
+	printf("distance to wall: %0.5f\n", ray_distance(data));
 	ft_exit(data);
 }
