@@ -6,12 +6,11 @@
 /*   By: jsanger <jsanger@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 18:45:14 by jsanger           #+#    #+#             */
-/*   Updated: 2023/12/17 23:35:03 by jsanger          ###   ########.fr       */
+/*   Updated: 2023/12/17 23:37:13 by jsanger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cub3d.h"
-#include <float.h>
 
 float calculateDistanceToWall(t_data *data, float dirX, float dirY)
 {
@@ -40,6 +39,8 @@ void	calculateDirection(float angle, float dir[2])
 {
 	float radianAngle;
 
+	while (angle > 360)
+		angle -= 360;
 	radianAngle = (angle) * PI / 180.0;
 	dir[0] = cos(radianAngle);
 	dir[1] = sin(radianAngle);
