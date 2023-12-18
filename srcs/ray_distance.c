@@ -6,7 +6,7 @@
 /*   By: jsanger <jsanger@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 18:45:14 by jsanger           #+#    #+#             */
-/*   Updated: 2023/12/17 23:37:13 by jsanger          ###   ########.fr       */
+/*   Updated: 2023/12/18 11:02:26 by jsanger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ float calculateDistanceToWall(t_data *data, float dirX, float dirY)
 	float currentX = data->player->x;
 	float currentY = data->player->y;
 
-	printf("%f\n", currentX);
-	printf("%f\n", currentY);
 	while (data->map->map[(int)currentY][(int)currentX] != '1')
 	{
 		if (data->map->map[(int)currentY][(int)currentX] == '\0'
@@ -41,15 +39,17 @@ void	calculateDirection(float angle, float dir[2])
 
 	while (angle > 360)
 		angle -= 360;
+	while (angle < 0)
+		angle += 360;
 	radianAngle = (angle) * PI / 180.0;
 	dir[0] = cos(radianAngle);
 	dir[1] = sin(radianAngle);
 }
 
-float ray_distance(t_data *data)
+float ray_distance(t_data *data, float angle)
 {
 	float dir[2];
 
-	calculateDirection(data->player->angle, dir);
+	calculateDirection(data->player->angle + angle, dir);
 	return (calculateDistanceToWall(data, dir[0], dir[1]));
 }
