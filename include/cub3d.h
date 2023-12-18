@@ -6,7 +6,7 @@
 /*   By: jsanger <jsanger@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 18:29:25 by jsanger           #+#    #+#             */
-/*   Updated: 2023/12/18 10:54:31 by jsanger          ###   ########.fr       */
+/*   Updated: 2023/12/18 17:47:18 by jsanger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include "../libft/srcs/libft.h"
 
 #define PI 3.14159265359
-#define SIZE 50
+#define SIZE 100
 
 
 typedef struct	s_player

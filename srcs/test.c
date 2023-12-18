@@ -6,7 +6,7 @@
 /*   By: jsanger <jsanger@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 18:34:57 by jsanger           #+#    #+#             */
-/*   Updated: 2023/12/18 12:21:32 by jsanger          ###   ########.fr       */
+/*   Updated: 2023/12/18 17:55:43 by jsanger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@ int32_t ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
 	return (r << 24 | g << 16 | b << 8 | a);
 }
 
-void ft_randomize(t_data *data)
+void reset(t_data *data)
 {
 	for (int32_t i = 0; i < data->image->width; ++i)
 	{
 		for (int32_t y = 0; y < data->image->height; ++y)
 		{
-			uint32_t color = ft_pixel(0, 255, 255, 255);
+			uint32_t color = ft_pixel(0, 0, 0, 255);
 			mlx_put_pixel(data->image, i, y, color);
 		}
 	}
@@ -34,30 +34,43 @@ void	calc_view(t_data *data)
 	float	temp1;
 	float	temp2;
 	int		j = 0;
+	int		angle;
 
 	temp1 = data->player->view_angle / 2;
 	temp2 = -temp1;
 
-	for (float k = temp2; k <= temp1; k++)
+
+	angle = temp1;
+	for (float k = temp2; k <= temp1; k += 01)
 	{
 		float height = ray_distance(data, k);
 		for (float i = (data->image->width / data->player->view_angle) * j; i < (data->image->width / data->player->view_angle) * (j + 1); ++i)
 		{
-			for (int32_t y = data->image->height / 2; y < (data->image->height / 2) + (SIZE * 5 / ( height / 2)); ++y)
+			float tmp = height * cos((angle) * PI / 180);
+			float linehight = (data->image->height / 2) + (SIZE * 3 / tmp);
+			float linehight1 = (data->image->height / 2) - (SIZE * 3 / tmp);
+			if (linehight1 < 0)
+				linehight1 = 0;
+			if (linehight >= data->image->height)
+				linehight = data->image->height;
+
+			for (int32_t y = data->image->height / 2; y < linehight; y++)
 			{
 				uint32_t color = ft_pixel(0, 255, 255, 255);
 				mlx_put_pixel(data->image, i, y, color);
 			}
-			for (int32_t y = data->image->height / 2; y > ((data->image->height / 2) - (SIZE * 5 / (height / 2))); --y)
+			for (int32_t y = data->image->height / 2; y > linehight1; y--)
 			{
 				uint32_t color = ft_pixel(0, 255, 255, 255);
 				mlx_put_pixel(data->image, i, y, color);
 			}
 		}
+		angle--;
 		j++;
 	}
 	mlx_image_to_window(data->mlx, data->image, data->map->height, data->map->width);
 		// printf("%0.3f\n", ray_distance(data, i));
+		// for (float i = (data->image->width / data->player->view_angle) * j; i < (data->image->width / data->player->view_angle) * (j + 1); ++i)
 }
 
 void ft_hook(void* param)
@@ -69,8 +82,43 @@ void ft_hook(void* param)
 		mlx_delete_image(data->mlx, data->image);
 		ft_exit(data);
 	}
-	if (mlx_is_key_down(data->mlx, MLX_KEY_C))
+
+	if (mlx_is_key_down(data->mlx, MLX_KEY_W))
 	{
+		data->player->y += 0.08;
+		reset(data);
+		calc_view(data);
+	}
+	if (mlx_is_key_down(data->mlx, MLX_KEY_S))
+	{
+		data->player->y -= 0.08;
+		reset(data);
+		calc_view(data);
+	}
+		if (mlx_is_key_down(data->mlx, MLX_KEY_A))
+	{
+		data->player->x += 0.08;
+		reset(data);
+		calc_view(data);
+	}
+	if (mlx_is_key_down(data->mlx, MLX_KEY_D))
+	{
+		data->player->x -= 0.08;
+		reset(data);
+		calc_view(data);
+	}
+
+
+	if (mlx_is_key_down(data->mlx, MLX_KEY_RIGHT))
+	{
+		data->player->angle += 5;
+		reset(data);
+		calc_view(data);
+	}
+	if (mlx_is_key_down(data->mlx, MLX_KEY_LEFT))
+	{
+		data->player->angle -= 5;
+		reset(data);
 		calc_view(data);
 	}
 }
@@ -101,10 +149,10 @@ void	get_player_coords(t_data *data)
 
 void	struct_declaration(t_data *data)
 {
-	data->player->angle = 45;
+	data->player->angle = 90;
 	data->player->x = 0;
 	data->player->y = 0;
-	data->player->view_angle = 100;
+	data->player->view_angle = 80;
 }
 
 int	init(t_data *data, t_map *map, t_player *player,char *input)
@@ -126,6 +174,8 @@ int	init(t_data *data, t_map *map, t_player *player,char *input)
 	data->map = map;
 	struct_declaration(data);
 	get_player_coords(data);
+	reset(data);
+	calc_view(data);
 	return (0);
 }
 
@@ -141,7 +191,6 @@ int main(int argc, char** argv)
 
 	if (init(data, map, player, argv[1]))
 		return (1);
-	// ft_randomize(data);
 
 	mlx_loop_hook(data->mlx, ft_hook, data);
 	mlx_loop(data->mlx);
