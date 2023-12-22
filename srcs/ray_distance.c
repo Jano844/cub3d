@@ -6,7 +6,7 @@
 /*   By: jsanger <jsanger@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/17 18:45:14 by jsanger           #+#    #+#             */
-/*   Updated: 2023/12/18 17:48:35 by jsanger          ###   ########.fr       */
+/*   Updated: 2023/12/21 19:13:47 by jsanger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 float calculateDistanceToWall(t_data *data, float dirX, float dirY)
 {
-	float stepSize = 0.001;
+	float stepSize = 0.01;
 	float distance;
 	float currentX = data->player->x;
 	float currentY = data->player->y;

@@ -6,7 +6,7 @@
 /*   By: jsanger <jsanger@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 18:34:57 by jsanger           #+#    #+#             */
-/*   Updated: 2023/12/18 17:55:43 by jsanger          ###   ########.fr       */
+/*   Updated: 2023/12/21 19:13:14 by jsanger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,24 +31,47 @@ void reset(t_data *data)
 
 void	calc_view(t_data *data)
 {
-	float	temp1;
-	float	temp2;
+	float	temp1 = -1;
+	float	temp2 = -1;
 	int		j = 0;
 	int		angle;
 
-	temp1 = data->player->view_angle / 2;
-	temp2 = -temp1;
 
-
-	angle = temp1;
-	for (float k = temp2; k <= temp1; k += 01)
+	angle = data->player->view_angle / 2;
+	for (float k = -data->player->view_angle / 2; k <= data->player->view_angle / 2; k += 1) // iterate throug all rays from - view_angle/2 bis view_angle /2
 	{
 		float height = ray_distance(data, k);
 		for (float i = (data->image->width / data->player->view_angle) * j; i < (data->image->width / data->player->view_angle) * (j + 1); ++i)
 		{
 			float tmp = height * cos((angle) * PI / 180);
-			float linehight = (data->image->height / 2) + (SIZE * 3 / tmp);
-			float linehight1 = (data->image->height / 2) - (SIZE * 3 / tmp);
+			float linehight = (data->image->height / 2) + (SIZE * 3 / tmp); // nach unten
+			float linehight1 = (data->image->height / 2) - (SIZE * 3 / tmp); // nach oben
+			// Großes Freagezeichen
+			if (temp1 != -1)
+			{
+				int h = (linehight1 - temp1);
+				if (h > 0)
+				{
+					if (h < 1000)
+					{
+						int a = (data->image->width / data->player->view_angle) * j - (data->image->width / data->player->view_angle) * (j - 1);
+						int	y = linehight1;
+						int	x = (data->image->width / data->player->view_angle) * j;
+						draw_triangle(data, a, h , x, y, 0);
+					}
+				}else
+				{
+					h = temp1 - linehight1;
+					if (h < 1000)
+					{
+						int a = (data->image->width / data->player->view_angle) * j - (data->image->width / data->player->view_angle) * (j - 1);
+						int	y = linehight1;
+						int	x = (data->image->width / data->player->view_angle) * j;
+						draw_triangle(data, a, h , x, y + 2 , 1);
+					}
+				}
+			}
+			temp1 = linehight1;
 			if (linehight1 < 0)
 				linehight1 = 0;
 			if (linehight >= data->image->height)
@@ -68,7 +91,7 @@ void	calc_view(t_data *data)
 		angle--;
 		j++;
 	}
-	mlx_image_to_window(data->mlx, data->image, data->map->height, data->map->width);
+	mlx_image_to_window(data->mlx, data->image, 0, 0);
 		// printf("%0.3f\n", ray_distance(data, i));
 		// for (float i = (data->image->width / data->player->view_angle) * j; i < (data->image->width / data->player->view_angle) * (j + 1); ++i)
 }
@@ -85,25 +108,29 @@ void ft_hook(void* param)
 
 	if (mlx_is_key_down(data->mlx, MLX_KEY_W))
 	{
-		data->player->y += 0.08;
+		data->player->x += 0.1 * cos(degrees_to_radians(data->player->angle));
+		data->player->y += 0.1 * sin(degrees_to_radians(data->player->angle));
 		reset(data);
 		calc_view(data);
 	}
 	if (mlx_is_key_down(data->mlx, MLX_KEY_S))
 	{
-		data->player->y -= 0.08;
+		data->player->x += 0.1 * cos(degrees_to_radians(data->player->angle + 180));
+		data->player->y += 0.1 * sin(degrees_to_radians(data->player->angle + 180));
 		reset(data);
 		calc_view(data);
 	}
 		if (mlx_is_key_down(data->mlx, MLX_KEY_A))
 	{
-		data->player->x += 0.08;
+		data->player->x += 0.1 * cos(degrees_to_radians(data->player->angle + 270));
+		data->player->y += 0.1 * sin(degrees_to_radians(data->player->angle + 270));
 		reset(data);
 		calc_view(data);
 	}
 	if (mlx_is_key_down(data->mlx, MLX_KEY_D))
 	{
-		data->player->x -= 0.08;
+		data->player->x += 0.1 * cos(degrees_to_radians(data->player->angle + 90));
+		data->player->y += 0.1 * sin(degrees_to_radians(data->player->angle + 90));
 		reset(data);
 		calc_view(data);
 	}
@@ -121,6 +148,7 @@ void ft_hook(void* param)
 		reset(data);
 		calc_view(data);
 	}
+	usleep(1000);
 }
 
 void	get_player_coords(t_data *data)
@@ -193,6 +221,7 @@ int main(int argc, char** argv)
 		return (1);
 
 	mlx_loop_hook(data->mlx, ft_hook, data);
+	mlx_image_to_window(data->mlx, data->image, 0, 0);
 	mlx_loop(data->mlx);
 	ft_exit(data);
 }
