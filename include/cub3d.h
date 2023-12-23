@@ -6,7 +6,7 @@
 /*   By: jsanger <jsanger@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 18:29:25 by jsanger           #+#    #+#             */
-/*   Updated: 2023/12/18 17:47:18 by jsanger          ###   ########.fr       */
+/*   Updated: 2023/12/22 23:02:32 by jsanger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <stdbool.h>
 #include <fcntl.h>
 #include <math.h>
+#include <limits.h>
 #include "../MLX42/include/MLX42/MLX42.h"
 # include "../libft/srcs/libft.h"
 
@@ -57,8 +58,13 @@ void	get_map(t_map *map, char *input);
 // utils
 void	ft_free2d(char **str);
 void	ft_exit(t_data *data);
+double	radians_to_degrees(double radians);
+double	degrees_to_radians(double degrees);
+int32_t ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a);
 
 // get_distance to wall
 float	ray_distance(t_data *data, float angle);
+
+void	draw_triangle(t_data *data, float a, float h, int x, int y, int dir);
 
 #endif
