@@ -6,7 +6,7 @@
 /*   By: jsanger <jsanger@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 21:05:04 by jsanger           #+#    #+#             */
-/*   Updated: 2023/12/23 22:41:45 by jsanger          ###   ########.fr       */
+/*   Updated: 2023/12/23 22:53:06 by jsanger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,7 @@ int	check_wall_hit(char dir, int step_x, int step_y)
 	// printf("%d   %d\n", step_x, step_y);
 	if (map[(int)(player_pos_y + step_y + (player_pos_y - (int)player_pos_y))]
 		[(int)(player_pos_x + step_x + (player_pos_x - (int)player_pos_x))] == '1')
-		{
 			return (1);
-		}
 	return (0);
 }
 
@@ -130,11 +128,10 @@ float	startdist(float m, float angle)
 		disty = 1 - disty;
 	if (angle >= 90 && angle <= 270)
 		distx = 1 - distx;
-
 	distx *= 10;
 	disty *= 10;
-	float tempx = sqrt(pow(distx, 2) + pow(m, 2)) / 10;
-	float tempy = sqrt(pow(disty, 2) + pow(1/m, 2)) / 10;
+	float tempx = (distx * sqrt(1 + pow(m, 2))) / 10;
+	float tempy = (disty * sqrt(1 + pow(1/m, 2))) / 10;
 	if (tempx < tempy)
 		return (tempx);
 	return (tempy);
@@ -142,13 +139,12 @@ float	startdist(float m, float angle)
 
 int	main(int argc, char **argv)
 {
-	float	angle = atoi(argv[1]);
+	float	angle = atof(argv[1]);
 	float	dist;
 	float	m;
 
 	m = fabs(get_slope(angle));
 	dist = fabs(calc_distance(m, angle));
-	printf("Distance: %f\n", dist);
 	dist += fabs(startdist(m, angle));
 	printf("Distance: %f\n", dist);
 }
