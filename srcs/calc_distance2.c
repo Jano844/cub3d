@@ -6,21 +6,21 @@
 /*   By: jsanger <jsanger@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 21:05:04 by jsanger           #+#    #+#             */
-/*   Updated: 2023/12/23 22:53:06 by jsanger          ###   ########.fr       */
+/*   Updated: 2023/12/25 16:00:59 by jsanger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cub3d.h"
 
-float	player_pos_x = 2.5;
-float	player_pos_y = 2.5;
+float	player_pos_x = 1.1;
+float	player_pos_y = 1;
 
 char map[7][7] =
 {
 		{'1', '1', '1', '1', '1', '1', '1'},
 		{'1', '0', '0', '0', '0', '0', '1'},
 		{'1', '0', '0', '0', '0', '0', '1'},
-		{'1', '0', '0', '0', '0', '0', '1'},
+		{'1', '0', '0', 'P', '0', '0', '1'},
 		{'1', '0', '0', '0', '0', '0', '1'},
 		{'1', '0', '0', '0', '0', '0', '1'},
 		{'1', '1', '1', '1', '1', '1', '1'}
@@ -59,7 +59,6 @@ float	calc_sx_sy(float m, char dir)
 
 int	check_wall_hit(char dir, int step_x, int step_y)
 {
-	// printf("%d   %d\n", step_x, step_y);
 	if (map[(int)(player_pos_y + step_y + (player_pos_y - (int)player_pos_y))]
 		[(int)(player_pos_x + step_x + (player_pos_x - (int)player_pos_x))] == '1')
 			return (1);
@@ -112,28 +111,64 @@ float	calc_distance(float m, float angle)
 	}
 }
 
-double d_to_r(double degrees)
-{
-	return (degrees * PI / 180.0);
-}
-
-float	startdist(float m, float angle)
+float	startdist(float m, float angle, float *playerx, float *playery)
 {
 	float distx;
 	float disty;
 
-	disty =  1 - (player_pos_y - (int)player_pos_y);
-	distx = 1 - (player_pos_x - (int)player_pos_x);
+	disty =  1 - (*playery - (int)*playery);
+	distx = 1 - (*playerx - (int)*playerx);
 	if (angle >= 0 && angle <= 180)
 		disty = 1 - disty;
 	if (angle >= 90 && angle <= 270)
 		distx = 1 - distx;
+
 	distx *= 10;
 	disty *= 10;
+
+	if (angle == 0 || angle == 180)
+	{
+		if (angle >= 90 && angle <= 270)
+			*playerx -= distx / 10;
+		else
+			*playerx += distx / 10;
+		return (distx / 10);
+	}
+	if (angle == 90 || angle == 270)
+	{
+		if (angle >= 0 && angle <= 180)
+			*playery -= disty / 10;
+		else
+			*playery += disty / 10;
+		return (disty / 10);
+	}
 	float tempx = (distx * sqrt(1 + pow(m, 2))) / 10;
 	float tempy = (disty * sqrt(1 + pow(1/m, 2))) / 10;
+	if (m == 0)
+		return (tempx);;
 	if (tempx < tempy)
+	{
+		if (angle >= 90 && angle <= 270)
+			*playerx -= distx / 10;
+		else
+			*playerx += distx / 10;
+
+		if (angle >= 0 && angle <= 180)
+			*playery -= sqrt(pow(tempx, 2) - pow((distx / 10), 2));
+		else
+			*playery += sqrt(pow(tempx, 2) - pow((distx / 10), 2));
 		return (tempx);
+	}
+	if (angle >= 0 && angle <= 180)
+		*playery -= disty / 10;
+	else
+		*playery += disty / 10;
+
+	if (angle >= 90 && angle <= 270)
+		*playerx -= sqrt(pow(tempy, 2) - pow((disty / 10), 2));
+	else
+		*playerx += sqrt(pow(tempy, 2) - pow((disty / 10), 2));
+
 	return (tempy);
 }
 
@@ -142,9 +177,13 @@ int	main(int argc, char **argv)
 	float	angle = atof(argv[1]);
 	float	dist;
 	float	m;
+	float	playerx = 1.5;
+	float	playery = 2.5;
 
 	m = fabs(get_slope(angle));
-	dist = fabs(calc_distance(m, angle));
-	dist += fabs(startdist(m, angle));
-	printf("Distance: %f\n", dist);
+	// dist = fabs(calc_distance(m, angle));
+	// printf("Distance: %f\n", fabs(dist));
+	dist += fabs(startdist(m, angle, &playerx, &playery));
+	printf("%f  %f\n", playerx, playery);
+	printf("Distance: %f\n", fabs(dist));
 }
