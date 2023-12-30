@@ -17,7 +17,7 @@ INCLUDE				=	libft/
 REPO_URL			=	https://github.com/codam-coding-college/MLX42.git
 LOCAL_DIR			=	MLX42
 
-SRCS				=	srcs/test.c srcs/get_map.c srcs/utils.c srcs/ray_distance.c srcs/draw_triangle.c
+SRCS				=	srcs/test.c srcs/get_map.c srcs/utils.c srcs/ray_distance.c srcs/draw_triangle.c srcs/calc_distance2.c
 
 OBJS				=	$(SRCS:.c=.o)
 

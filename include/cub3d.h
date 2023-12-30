@@ -6,7 +6,7 @@
 /*   By: jsanger <jsanger@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 18:29:25 by jsanger           #+#    #+#             */
-/*   Updated: 2023/12/22 23:02:32 by jsanger          ###   ########.fr       */
+/*   Updated: 2023/12/27 16:26:06 by jsanger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ int32_t ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a);
 
 // get_distance to wall
 float	ray_distance(t_data *data, float angle);
+float	calc_dist(t_data *data, float angle, char *dir);
 
 void	draw_triangle(t_data *data, float a, float h, int x, int y, int dir);
 

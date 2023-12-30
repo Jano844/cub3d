@@ -6,25 +6,11 @@
 /*   By: jsanger <jsanger@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 21:05:04 by jsanger           #+#    #+#             */
-/*   Updated: 2023/12/27 14:07:04 by jsanger          ###   ########.fr       */
+/*   Updated: 2023/12/30 16:26:16 by jsanger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cub3d.h"
-
-#define WIDTH 7
-#define HEIGHT 7
-
-char map[HEIGHT][WIDTH] =
-{
-		{'1', '1', '1', '1', '1', '1', '1'},
-		{'1', '0', '0', '0', '0', '0', '1'},
-		{'1', '0', '0', '0', '0', '0', '1'},
-		{'1', '0', '0', 'P', '0', '0', '1'},
-		{'1', '0', '0', '0', '0', '0', '1'},
-		{'1', '0', '0', '0', '0', '1', '1'},
-		{'1', '1', '1', '1', '1', '1', '1'}
-};
 
 float	get_slope(float angle)
 {
@@ -46,7 +32,28 @@ float	get_slope(float angle)
 	return (diry/dirx);
 }
 
-float	startdist(float m, float angle, float *playerx, float *playery)
+
+int	aufrunden(float num)
+{
+	float	temp;
+
+	if (num >= 0)
+	{
+		temp = num - (int)num;
+		if (temp == 0)
+			return (num);
+		temp = 1 - temp;
+		return (num + temp);
+	}
+	num = fabs(num);
+	temp = num - (int)num;
+	if (temp == 0)
+		return (-num);
+	temp = 1 - temp;
+	return (-(num + temp));
+}
+
+float	startdist(float m, float angle, float *playerx, float *playery, char *dir, bool	*xminus, bool *yminus)
 {
 	float distx;
 	float disty;
@@ -68,7 +75,10 @@ float	startdist(float m, float angle, float *playerx, float *playery)
 	if (angle == 0 || angle == 180)
 	{
 		if (angle >= 90 && angle <= 270)
+		{
+			*xminus = true;
 			*playerx -= distx / 10;
+		}
 		else
 			*playerx += distx / 10;
 		return (distx / 10);
@@ -76,7 +86,10 @@ float	startdist(float m, float angle, float *playerx, float *playery)
 	if (angle == 90 || angle == 270)
 	{
 		if (angle >= 0 && angle <= 180)
+		{
+			*yminus = true;
 			*playery -= disty / 10;
+		}
 		else
 			*playery += disty / 10;
 		return (disty / 10);
@@ -88,26 +101,39 @@ float	startdist(float m, float angle, float *playerx, float *playery)
 	if (tempx < tempy)
 	{
 		if (angle >= 90 && angle <= 270)
+		{
+			*xminus = true;
 			*playerx -= distx / 10;
+		}
 		else
 			*playerx += distx / 10;
 
 		if (angle >= 0 && angle <= 180)
+		{
+			*yminus = true;
 			*playery -= sqrt(pow(tempx, 2) - pow((distx / 10), 2));
+		}
 		else
 			*playery += sqrt(pow(tempx, 2) - pow((distx / 10), 2));
+		*dir = 'x';
 		return (tempx);
 	}
 	if (angle >= 0 && angle <= 180)
+	{
+		*yminus = true;
 		*playery -= disty / 10;
+	}
 	else
 		*playery += disty / 10;
 
 	if (angle >= 90 && angle <= 270)
+	{
+		*xminus = true;
 		*playerx -= sqrt(pow(tempy, 2) - pow((disty / 10), 2));
+	}
 	else
 		*playerx += sqrt(pow(tempy, 2) - pow((disty / 10), 2));
-
+	*dir = 'y';
 	return (tempy);
 }
 
@@ -123,40 +149,82 @@ float	get_phi(float gegen, float an)
 	return(deg_angle);
 }
 
-float	calc_distance(float angle, float playerx, float playery)
+float	calc_distance(float angle, float playerx, float playery, t_data *data, char *dir)
 {
 	float	dist = 0;
-	float phi1 = get_phi(playery - 1, WIDTH - (playerx + 1));
-	float phi2 = get_phi(-(HEIGHT - (playery + 1)), -(playerx - 1));
-	int i = -1;
+	// float phiObenRechts = get_phi(playery - 1, data->map->width - (playerx + 1));
+	// float phiObenLinks = get_phi(playery - 1, -(playerx - 1));
+	// float phiUntenLinks = get_phi(-(data->map->height - (playery + 1)), -(playerx - 1));
+	// float phiUntenRechts = get_phi(-(data->map->height - (playery + 1)), (playerx - 1));
+	// int i = -1;
 	int	tempy = playery;
 	int	tempx = playerx;
 	float last_dist = dist;
 	float	m;
+	char	last_dir;
+	bool	xmin = false;
+	bool	ymin = false;
 
 	m = fabs(get_slope(angle));
-	while (map[tempy][tempx] != '1')
+	while (data->map->map[tempy][tempx] != '1')
 	{
-		last_dist = dist;
-		if (map[tempy][tempx] == '1')
-			break ;
-		dist += fabs(startdist(m, angle, &playerx, &playery));
+		ymin = false;
+		xmin = false;
 		tempy = playery;
 		tempx = playerx;
-		if (map[tempy][tempx] == '1')
+		last_dist = dist;
+		last_dir = *dir;
+		if (data->map->map[tempy][tempx] == '1')
+			break ;
+		dist += fabs(startdist(m, angle, &playerx, &playery, dir, &xmin, &ymin));
+		// printf("%.2f x: %d y: %d\n", dist, tempx, tempy);
+		tempy = playery;
+		tempx = playerx;
+		if (xmin == true && ymin == true)
+		{
+			tempx = aufrunden(playerx) - 1;
+			tempy = aufrunden(playery) - 1;
+		}
+		else
+		{
+			if (xmin == true)
+				tempx = aufrunden(playerx) - 1;
+			if (ymin == true)
+				tempy = aufrunden(playery) - 1;
+		}
+		// printf("%.2f\n", dist);
+		// printf("%d  %d\n", tempx, tempy);
+		// printf("%.2f  %.2f\n", playerx, playery);
+		if (data->map->map[tempy][tempx] == '1')
 			break ;
 	}
-	if (angle > phi1 && angle < phi2)
-		dist = last_dist;
+	// printf("angle %f dist %f last_dist %f dir %c\n", angle, dist, last_dist, *dir);
+	// if ((angle > phiObenRechts && angle < phiObenLinks) && last_dir != 'x')
+	// {
+	// 	*dir = last_dir;
+	// 	dist = last_dist;
+	// }
+	// if ((angle >phiObenLinks && angle < phiUntenLinks) && last_dir != 'y') //
+	// {
+	// 	*dir = last_dir;
+	// 	dist = last_dist;
+	// }
+	// printf("%f  %f\n", dist, angle);
+	// printf("angle %f dist %f last_dist %f dir %c\n", angle, dist, last_dist, *dir);
+	// printf("OL: %.1f OR:%.1f\nUL: %.1f UR: %.1f\n", phiObenLinks, phiObenRechts, phiUntenLinks, phiUntenRechts);
 	return (fabs(dist));
 }
 
-int	main(int argc, char **argv)
+
+float	calc_dist(t_data *data, float angle, char *dir)
 {
-	float	angle = atof(argv[1]);
-	float	playerx = 2;
-	float	playery = 2;
+	float	playerx = data->player->x;
+	float	playery = data->player->y;
+
+	angle = data->player->angle + angle;
 	while (angle >= 360)
 		angle -= 360;
-	printf("%f\n", calc_distance(angle, playerx, playery));
+	while (angle < 0)
+		angle += 360;
+	return(calc_distance(angle, playerx, playery, data, dir));
 }
