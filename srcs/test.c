@@ -6,7 +6,7 @@
 /*   By: jsanger <jsanger@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 18:34:57 by jsanger           #+#    #+#             */
-/*   Updated: 2023/12/30 16:20:29 by jsanger          ###   ########.fr       */
+/*   Updated: 2023/12/30 17:53:31 by jsanger          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,12 +172,14 @@ int	init(t_data *data, t_map *map, t_player *player,char *input)
 {
 	get_map(map, input);
 	map->width -= 1;
-	if (!(data->mlx = mlx_init(map->width * SIZE, map->height * SIZE, "MLX42", true)))
+	int	temp_height = 128 * 10;
+	int	temp_width = 128 * 7;
+	if (!(data->mlx = mlx_init(temp_height, temp_width, "MLX42", true)))
 	{
 		puts(mlx_strerror(mlx_errno));
 		return(1);
 	}
-	if (!(data->image = mlx_new_image(data->mlx, map->height * SIZE, map->width * SIZE)))
+	if (!(data->image = mlx_new_image(data->mlx, temp_height, temp_width)))
 	{
 		mlx_close_window(data->mlx);
 		puts(mlx_strerror(mlx_errno));
@@ -188,7 +190,7 @@ int	init(t_data *data, t_map *map, t_player *player,char *input)
 	struct_declaration(data);
 	get_player_coords(data);
 	reset(data);
-	// calc_view(data);
+	calc_view(data);
 	return (0);
 }
 
