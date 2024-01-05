@@ -1,0 +1,54 @@
+R 800 500
+NO ./texture/darker_wall.xpm
+SO ./texture/door_wall.xpm
+WE ./texture/normal_wall.xpm
+EA ./texture/normal_wall.xpm
+
+S ./texture/player_green.xpm
+G ./texture/player_green_dead.xpm
+T ./texture/player_blue.xpm
+H ./texture/player_blue_dead.xpm
+U ./texture/player_red.xpm
+I ./texture/player_red_dead.xpm
+V ./texture/player_black.xpm
+J ./texture/player_black_dead.xpm
+W ./texture/player_orange.xpm
+K ./texture/player_orange_dead.xpm
+a ./texture/player_white.xpm
+L ./texture/player_white_dead.xpm
+b ./texture/player_brown.xpm
+M ./texture/player_brown_dead.xpm
+c ./texture/player_light_blue.xpm
+N ./texture/player_light_blue_dead.xpm
+d ./texture/player_lime.xpm
+O ./texture/player_lime_dead.xpm
+e ./texture/player_pink.xpm
+P ./texture/player_pink_dead.xpm
+f ./texture/player_purple.xpm
+Q ./texture/player_purple_dead.xpm
+g ./texture/player_yellow.xpm
+h ./texture/player_yellow_dead.xpm
+
+k ./texture/bad_brown.xpm
+l ./texture/bad_green.xpm
+m ./texture/bad_pink.xpm
+n ./texture/heart.xpm
+o ./texture/scan.xpm
+
+. ./texture/heal_cross.xpm
+, ./texture/heal_wall.xpm
+_ ./texture/heal_control.xpm
+@ ./texture/wall_control.xpm
+# ./texture/technic.xpm
+$ ./texture/window.xpm
+F 92,92,92
+C 94,91,140
+
+1111111111111111111
+1000100010001000121
+1010001000100010111
+10111111111111101
+101E0000400000001
+1j111111111111111
+121
+111
