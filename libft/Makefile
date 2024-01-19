@@ -34,12 +34,12 @@ all: 				$(NAME)
 
 $(NAME): 			$(OBJS)
 					@ar rcs $(NAME) $(OBJS)
-					@echo "$(COLOR_CYAN)Kompilierung abgeschlossen: $(NAME)$(COLOR_RESET)"
+					@echo "$(COLOR_CYAN)[READY] $(NAME)$(COLOR_RESET)"
 
 $(OBJ_F)%.o:		$(SRC_F)%.c
 					@mkdir -p $(OBJ_F)
 					@$(COMPILE) $(FLAGS) -c $< -o $@
-					@echo "$(COLOR_GREEN)Kompilierung abgeschlossen: $@$(COLOR_RESET)"
+					@echo "$(COLOR_GREEN)[OK] $@$(COLOR_RESET)"
 
 clean:
 					@rm -rf $(OBJ_F)

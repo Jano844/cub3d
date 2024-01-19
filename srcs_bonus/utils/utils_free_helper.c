@@ -1,29 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   utils_free_helper.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: slippert <slippert@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/07 12:02:41 by slippert          #+#    #+#             */
-/*   Updated: 2023/12/29 12:12:36 by slippert         ###   ########.fr       */
+/*   Created: 2023/12/15 21:08:51 by jsanger           #+#    #+#             */
+/*   Updated: 2024/01/12 11:28:58 by slippert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../include/cub3d.h"
 
-char	*ft_strchr(const char *s, int c)
+void	ft_check_free(char *str)
 {
-	unsigned char	a_c;
+	if (str != NULL)
+		free(str);
+}
 
-	a_c = (unsigned char) c;
-	while (*s)
-	{
-		if (*s == a_c)
-			return ((char *)s);
-		s++;
-	}
-	if (a_c == *s)
-		return ((char *)s);
-	return (NULL);
+void	ft_check_free_text(mlx_texture_t *text)
+{
+	if (text != NULL)
+		mlx_delete_texture(text);
 }
